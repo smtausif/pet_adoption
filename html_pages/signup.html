@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Pet Adoption Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-300 to-gray-400 font-sans flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+    <h2 class="text-2xl font-bold mb-6 text-center">Create an Account</h2>
+    <form action="/signup" method="POST" class="space-y-4">
+      <input type="text" name="name" placeholder="Full Name" class="w-full p-3 border rounded-lg" required>
+      <input type="email" name="email" placeholder="Email Address" class="w-full p-3 border rounded-lg" required>
+      <input type="password" name="password" placeholder="Password" class="w-full p-3 border rounded-lg" required>
+      <input type="password" name="confirm_password" placeholder="Confirm Password" class="w-full p-3 border rounded-lg" required>
+      
+      <button type="submit" class="w-full bg-blue-300 text-white py-3 rounded-lg hover:bg-blue-600 transition">
+        sign 🐾 up
+      </button>
+    </form>
+    <p class="text-center text-sm text-gray-600 mt-4">
+      Already have an account? <a href="login.html" class="text-blue-500">Log in</a>
+    </p>
+  </div>
+</body>
+</html>
