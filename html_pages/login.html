@@ -10,11 +10,21 @@
       transform: scale(1.03);
       transition: transform 0.3s ease-in-out;
     }
+
+    body {
+      background-image: url('../media/background2.webp');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
   </style>
 </head>
-<body class="bg-gradient-to-r from-blue-300 to-gray-400 font-sans flex items-center justify-center min-h-screen">
-  <div class="bg-white p-8 rounded-lg shadow-lg w-96 border border-gray-300">
+
+<body class="font-sans flex items-center justify-center min-h-screen">
+  <div class="bg-white bg-opacity-90 p-8 rounded-lg shadow-lg w-96 border border-gray-300">
     <h2 class="text-3xl font-bold mb-6 text-center text-blue-300">🐾 Log In</h2>
+    
     <form action="/login" method="POST" class="space-y-4">
       <input type="email" name="email" placeholder="Email" class="w-full p-3 border rounded-lg" required>
       <input type="password" name="password" placeholder="Password" class="w-full p-3 border rounded-lg" required>
@@ -23,6 +33,7 @@
         🚪 Log In
       </button>
     </form>
+
     <p class="text-center text-sm text-gray-600 mt-4">
       Don't have an account? <a href="signup.html" class="text-blue-500 hover:underline">Sign up</a>
     </p>

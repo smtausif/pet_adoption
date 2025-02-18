@@ -1,0 +1,36 @@
+<!-- html_pages/adopt.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book an Appointment - Pet Adoption Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('../media/background.webp');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+  </style>
+</head>
+<body class="font-sans flex items-center justify-center min-h-screen">
+  <div class="bg-white bg-opacity-90 p-8 rounded-lg shadow-lg w-96">
+    <h2 class="text-2xl font-bold mb-4 text-center">📅 Book an Appointment</h2>
+    <form action="/book-appointment" method="POST" class="space-y-4">
+      <input type="text" name="name" placeholder="Your Full Name" class="w-full p-3 border rounded-lg" required>
+      <input type="email" name="email" placeholder="Your Email" class="w-full p-3 border rounded-lg" required>
+      <input type="text" name="animal" id="animalName" readonly class="w-full p-3 border rounded-lg" required>
+      <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition">
+        Book Appointment
+      </button>
+    </form>
+    <a href="/home.html" class="block text-center text-blue-500 hover:underline mt-4">Back to Listings</a>
+  </div>
+
+  <!-- Link to JavaScript -->
+  <script src="/js/adopt.js"></script>
+</body>
+</html>
