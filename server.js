@@ -1,6 +1,9 @@
 // localhost:3000/view-appointments
 //this is for admin to check the appoinments
 
+require('dotenv').config(); // Loads environment variables from .env
+
+
 // server.js
 const express = require('express');
 const mongoose = require('mongoose');
@@ -10,13 +13,14 @@ const User = require('./database.js');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const MONGO_URI = process.env.MONGO_URI;
+const PORT = process.env.PORT || 3000;
 
 //for hunter.io api to see if the email exists or not in real life
 const axios = require('axios');
 const emailValidator = require("email-validator");
 
-const HUNTER_API_KEY = "395c58efc94705b4750d4b239ff4dd01ddf36e10"; // Replace this with your key
+const HUNTER_API_KEY = process.env.HUNTER_API_KEY; // Replace this with your key
 
 // Middleware 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -26,10 +30,11 @@ app.use('/js', express.static(path.join(__dirname, 'js')));
 
 
 // MongoDB Connection
-mongoose.connect('mongodb://127.0.0.1:27017/petAdoptionHub', {
+mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+}).then(() => console.log("✅ Connected to MongoDB"))
+  .catch(err => console.error("❌ MongoDB Connection Error:", err));
 
 // Signup Route
 app.post('/signup', async (req, res) => {
