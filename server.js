@@ -1,4 +1,4 @@
-//http://localhost:3000/view-appointments
+// localhost:3000/view-appointments
 //this is for admin to check the appoinments
 
 // server.js
@@ -12,7 +12,13 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// Middleware
+//for hunter.io api to see if the email exists or not in real life
+const axios = require('axios');
+const emailValidator = require("email-validator");
+
+const HUNTER_API_KEY = "395c58efc94705b4750d4b239ff4dd01ddf36e10"; // Replace this with your key
+
+// Middleware 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'html_pages')));
 app.use('/media', express.static(path.join(__dirname, 'media')));
@@ -27,21 +33,45 @@ mongoose.connect('mongodb://127.0.0.1:27017/petAdoptionHub', {
 
 // Signup Route
 app.post('/signup', async (req, res) => {
-  const { name, email, password } = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-    });
-    await newUser.save();
-    //res.send('<h3>Account created successfully! 🎉 <a href="/login.html">Login Here</a></h3>');
-    res.sendFile(path.join(__dirname, 'html_pages', 'account_confirmation.html'))
-  } catch (error) {
-    res.status(500).send('<h3>Error creating account: Email may already be in use. ❌</h3>');
-  }
+    let { name, email, password, confirm_password } = req.body;
+
+    // If password comes as an array, take the first value
+    if (Array.isArray(password)) {
+        password = password[0];
+    }
+    if (Array.isArray(confirm_password)) {
+        confirm_password = confirm_password[0];
+    }
+
+    console.log("Received Signup Request:", req.body);
+
+    if (!password) {
+        return res.status(400).send('<h3>Password is required. ❌</h3><a href="/signup.html">Try Again</a>');
+    }
+
+    if (password !== confirm_password) {
+        return res.status(400).send('<h3>Passwords do not match. ❌</h3><a href="/signup.html">Try Again</a>');
+    }
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+        return res.status(400).send('<h3>Password must be at least 8 characters long and include letters, numbers, and special characters. ❌</h3><a href="/signup.html">Try Again</a>');
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ name, email, password: hashedPassword });
+        await newUser.save();
+
+        res.sendFile(path.join(__dirname, 'html_pages', 'account_confirmation.html'));
+    } catch (error) {
+        console.error("Signup Error:", error);
+        res.status(500).send('<h3>Error creating account. Please try again later. ❌</h3>');
+    }
 });
+
+
+
 
 // Login Route
 app.post('/login', async (req, res) => {
