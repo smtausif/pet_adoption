@@ -11,7 +11,7 @@ const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const User = require('./database.js');
 const path = require('path');
-
+require('dotenv').config(); // Loads environment variables from .env
 const app = express();
 const MONGO_URI = process.env.MONGO_URI;
 const PORT = process.env.PORT || 3000;
@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 3000;
 const axios = require('axios');
 const emailValidator = require("email-validator");
 
-const HUNTER_API_KEY = process.env.HUNTER_API_KEY; // Replace this with your key
+const HUNTER_API_KEY = process.env.HUNTER_API_KEY; 
 
 // Middleware 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,7 +29,6 @@ app.use('/media', express.static(path.join(__dirname, 'media')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 
 
-// MongoDB Connection
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
