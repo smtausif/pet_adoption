@@ -67,8 +67,8 @@ npm install
 ### 3️⃣ Set Up Environment Variables
 Create a `.env` file in the root folder and add:
 ```env
-MONGO_URI=your_mongodb_connection_string
-HUNTER_API_KEY=your_hunter_api_key
+MONGO_URI= only available for the admin (contact admin)
+HUNTER_API_KEY= contact admin
 PORT=3000
 ```
 
