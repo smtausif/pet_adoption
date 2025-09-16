@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'html_pages')));
 app.use('/media', express.static(path.join(__dirname, 'media')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
-
+app.use(bodyParser.json());
 
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
@@ -37,44 +37,44 @@ mongoose.connect(MONGO_URI, {
 
 // Signup Route
 app.post('/signup', async (req, res) => {
+  try {
     let { name, email, password, confirm_password } = req.body;
 
-    // If password comes as an array, take the first value
-    if (Array.isArray(password)) {
-        password = password[0];
-    }
-    if (Array.isArray(confirm_password)) {
-        confirm_password = confirm_password[0];
-    }
+    if (Array.isArray(password)) password = password[0];
+    if (Array.isArray(confirm_password)) confirm_password = confirm_password[0];
 
-    console.log("Received Signup Request:", req.body);
-
+    if (!name || !email) {
+      return res.status(400).send('<h3>Name and email are required. ❌</h3><a href="/signup.html">Try Again</a>');
+    }
     if (!password) {
-        return res.status(400).send('<h3>Password is required. ❌</h3><a href="/signup.html">Try Again</a>');
+      return res.status(400).send('<h3>Password is required. ❌</h3><a href="/signup.html">Try Again</a>');
     }
-
     if (password !== confirm_password) {
-        return res.status(400).send('<h3>Passwords do not match. ❌</h3><a href="/signup.html">Try Again</a>');
+      return res.status(400).send('<h3>Passwords do not match. ❌</h3><a href="/signup.html">Try Again</a>');
     }
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/;
     if (!passwordRegex.test(password)) {
-        return res.status(400).send('<h3>Password must be at least 8 characters long and include letters, numbers, and special characters. ❌</h3><a href="/signup.html">Try Again</a>');
+      return res.status(400).send('<h3>Password must be 8+ chars with letters, numbers, and a special character. ❌</h3><a href="/signup.html">Try Again</a>');
     }
 
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ name, email, password: hashedPassword });
-        await newUser.save();
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ name, email, password: hashedPassword });
 
-        res.sendFile(path.join(__dirname, 'html_pages', 'account_confirmation.html'));
-    } catch (error) {
-        console.error("Signup Error:", error);
-        res.status(500).send('<h3>Error creating account. Please try again later. ❌</h3>');
+    await newUser.save();  // <— where it’s failing now
+
+    return res.sendFile(path.join(__dirname, 'html_pages', 'account_confirmation.html'));
+  } catch (error) {
+    console.error('Signup Error:', error);
+
+    // Duplicate email
+    if (error && error.code === 11000) {
+      return res.status(409).send('<h3>Email already registered. Try logging in. ❌</h3><a href="/login.html">Log in</a>');
     }
+
+    return res.status(500).send(`<h3>Signup failed: ${error.message || 'Unknown error'} ❌</h3><a href="/signup.html">Try Again</a>`);
+  }
 });
-
-
 
 
 // Login Route
