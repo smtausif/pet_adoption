@@ -48,7 +48,7 @@ Pet Adoption Hub is a user-friendly platform that allows people to explore pet l
    ├── .env
    ├── package.json
    ├── README.md
-   └── vercel.json (if deploying on Vercel)
+   └── vercel.json 
 ```
 
 ## 📥 Installation & Running Locally
